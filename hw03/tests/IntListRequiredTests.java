@@ -163,4 +163,46 @@ public class IntListRequiredTests {
             fail("Test failed: Middle number is not correct.");
         }
     }
+
+    @Test
+    @Order(4)
+    @DisplayName("Test sum")
+    public void testSum(){
+        IntList L = of(1, 2, 3);
+        int expected = 6;
+        int result = L.sum();
+
+        if (result != expected) {
+            String errorMessage = String.format("For input %s, expected sum to return %s but got %s", intListToString(L), expected, result);
+            fail(errorMessage);
+        }
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("Test addLast")
+    public void testAddLast(){
+        IntList L = of(1, 2, 3);
+        IntList expected = of(1, 2, 3, 4);
+        L.addLast(4);
+
+        if (!checkEquals(L, expected)) {
+            String errorMessage = String.format("Expected addLast to return %s but got %s", intListToString(expected), intListToString(L));
+            fail(errorMessage);
+        }
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Test addFirst")
+    public void testAddFirst(){
+        IntList L = of(1, 2, 3);
+        IntList expected = of(0, 1, 2, 3);
+        L.addFirst(0);
+
+        if (!checkEquals(L, expected)) {
+            String errorMessage = String.format("Expected addLast to return %s but got %s", intListToString(expected), intListToString(L));
+            fail(errorMessage);
+        }
+    }
 }
