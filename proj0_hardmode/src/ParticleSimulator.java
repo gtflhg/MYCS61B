@@ -73,13 +73,14 @@ public class ParticleSimulator {
 
     }
 
-//    public void tick(){
-//        for(int x = 0; x < width; x += 1) {
-//            for(int y = 0; y < height; y += 1) {
-//               return;
-//            }
-//        }
-//    }
+    public void tick(){
+        for(int x = 0; x < width; x += 1) {
+            for(int y = 0; y < height; y += 1) {
+               particles[x][y].decrementLifespan();
+               particles[x][y].action(this.getNeighbors(x, y));
+            }
+        }
+    }
 
     static void main() {
         ParticleSimulator particleSimulator = new ParticleSimulator(150, 150);
@@ -90,21 +91,44 @@ public class ParticleSimulator {
         ParticleFlavor nextParticleFlavor = ParticleFlavor.SAND;
 
         while (true) {
-            if (StdDraw.hasNextKeyTyped()){
-                nextParticleFlavor = LETTER_TO_PARTICLE.get(StdDraw.nextKeyTyped());
+            if (StdDraw.hasNextKeyTyped()) {
+                nextParticleFlavor = LETTER_TO_PARTICLE.getOrDefault(StdDraw.nextKeyTyped(), nextParticleFlavor);
             }
 
             if (StdDraw.isMousePressed()) {
                 int x = (int) StdDraw.mouseX();
                 int y = (int) StdDraw.mouseY();
-                if (particleSimulator.validIndex(x, y)) {
+                if (particleSimulator.validIndex(x, y)&&particleSimulator.particles[x][y].flavor == ParticleFlavor.EMPTY) {
                     particleSimulator.particles[x][y] = new Particle(nextParticleFlavor);
                 }
             }
-
+            particleSimulator.tick();
             particleSimulator.drawParticles();
             StdDraw.show();
             StdDraw.pause(5);
         }
     }
+
+    @Override
+    public String toString() {
+        // 1. Build a reverse map to look up characters by Flavor
+        Map<ParticleFlavor, Character> flavorToChar = new HashMap<>();
+        for (Map.Entry<Character, ParticleFlavor> entry : LETTER_TO_PARTICLE.entrySet()) {
+            flavorToChar.put(entry.getValue(), entry.getKey());
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        // Have to iterate from the top so that
+        // the top particles are shown first.
+        for (int y = height - 1; y >= 0; y -= 1) {
+            for (int x = 0; x < width; x += 1) {
+                Particle p = particles[x][y];
+                sb.append(flavorToChar.get(p.flavor));
+            }
+            sb.append("\n");
+        }
+        return sb.toString();
+    }
 }
+
