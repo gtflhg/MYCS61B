@@ -31,4 +31,17 @@ public class Particle {
     public Color color(){
         return COLORS.get(flavor);
     }
+
+    public void moveInto(Particle other){
+        other.flavor = flavor;
+        other.lifespan = lifespan;
+        flavor = ParticleFlavor.EMPTY;
+        lifespan = -1;
+    }
+
+    public void fall(Map<Direction, Particle> neighbors){
+        if (neighbors.get(Direction.DOWN).flavor == ParticleFlavor.EMPTY) {
+            this.moveInto(neighbors.get(Direction.DOWN));
+        }
+    }
 }
