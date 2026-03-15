@@ -27,6 +27,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
             this.next = next;
         }
     }
+
     public static void main(String[] args) {
         Deque61B<Integer> lld = new LinkedListDeque61B<>();
         lld.addLast(0);   // [0]
@@ -84,7 +85,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
      */
     @Override
     public boolean isEmpty() {
-        return false;
+        return  size == 0;
     }
 
     /**
@@ -94,7 +95,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
      */
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     /**
@@ -104,7 +105,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
      */
     @Override
     public T getFirst() {
-        return null;
+        return sentinel.next.idem;
     }
 
     /**
@@ -114,7 +115,7 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
      */
     @Override
     public T getLast() {
-        return null;
+        return sentinel.prev.idem;
     }
 
     /**
@@ -124,7 +125,14 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
      */
     @Override
     public T removeFirst() {
-        return null;
+        if (this.isEmpty()) {
+            return null;
+        }
+        T temp = sentinel.next.idem;
+        sentinel.next.next.prev = sentinel;
+        sentinel.next = sentinel.next.next;
+        this.size--;
+        return temp;
     }
 
     /**
@@ -134,7 +142,14 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
      */
     @Override
     public T removeLast() {
-        return null;
+        if (this.isEmpty()) {
+            return null;
+        }
+        T temp = sentinel.prev.idem;
+        sentinel.prev.prev.next = sentinel;
+        sentinel.prev = sentinel.prev.prev;
+        this.size--;
+        return temp;
     }
 
     /**
@@ -148,7 +163,15 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
      */
     @Override
     public T get(int index) {
-        return null;
+        if (index < 0 || index >= size) {
+            return null;
+        }
+        Note<T> temp = sentinel.next;
+        while(index != 0) {
+            temp = temp.next;
+            index--;
+        }
+        return temp.idem;
     }
 
     /**
@@ -161,6 +184,16 @@ public class LinkedListDeque61B<T> implements Deque61B<T>{
      */
     @Override
     public T getRecursive(int index) {
-        return null;
+        if (index < 0 || index >= size) {
+            return null;
+        }
+        return getRecursive(sentinel.next, index);
+    }
+
+    private T getRecursive(Note<T> curnote, int i){
+        if(i == 0){
+            return curnote.idem;
+        }
+        return getRecursive(curnote.next, i-1);
     }
 }
