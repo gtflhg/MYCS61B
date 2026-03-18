@@ -15,27 +15,17 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
 
     private int getActualIndex(int index){
         int actualIndex = index + nextFirst + 1;
-        if(actualIndex >= 1000){
-            actualIndex -= 1000;
-        }
-        return actualIndex;
+
+        return getIndexInCircle(actualIndex);
     }
 
-    private int update(int i, int toUpdate){
-        int index = toUpdate + i;
-        if(index < 0){
-            index += 1000;
-        }else if(index >= 1000){
-            index -= 1000;
+    private int getIndexInCircle(int index){
+        if(index >= 1000){
+            return index - 1000;
+        }else if(index < 0){
+            return index + 1000;
         }
         return index;
-    }
-
-    private int getNextLast(){
-        if(size == 0){
-            return 0;
-        }
-        return update(size + 1, nextFirst);
     }
 
     private boolean validateIndex(int index){
@@ -52,7 +42,7 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
         int index = getActualIndex(-1);
         elements[index] = x;
         size++;
-        nextFirst = update(-1, nextFirst);
+        nextFirst = getIndexInCircle(nextFirst - 1);
     }
 
     /**
@@ -65,9 +55,6 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
         int index = getActualIndex(size);
         elements[index] = x;
         size++;
-        if (index == 0){
-            nextFirst = update(-1, nextFirst);
-        }
     }
 
     /**
@@ -137,7 +124,7 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
         T temp = elements[getActualIndex(0)];
         elements[getActualIndex(0)] = null;
         size--;
-        nextFirst = update(1,  nextFirst);
+        nextFirst = getIndexInCircle(nextFirst + 1);
         return temp;
     }
 
@@ -154,9 +141,6 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
         T temp = elements[getActualIndex(size-1)];
         elements[getActualIndex(size-1)] = null;
         size--;
-        if (size == 0){
-            nextFirst = update(1, nextFirst);
-        }
         return temp;
     }
 
