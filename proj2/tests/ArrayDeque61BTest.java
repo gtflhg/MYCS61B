@@ -7,7 +7,7 @@ public class ArrayDeque61BTest {
     @Test
     @DisplayName("Get First Test")
     void getFirstTest() {
-        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>();
+        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>(8);
         assertThat(deque.getFirst()).isEqualTo(null);
         deque.addFirst(2);
         assertThat(deque.getFirst()).isEqualTo(2);
@@ -20,7 +20,7 @@ public class ArrayDeque61BTest {
     @Test
     @DisplayName("Get Last Test")
     void getLastTest() {
-        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>();
+        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>(8);
         assertThat(deque.getLast()).isEqualTo(null);
         deque.addLast(2);
         assertThat(deque.getLast()).isEqualTo(2);
@@ -33,7 +33,7 @@ public class ArrayDeque61BTest {
     @Test
     @DisplayName("Get Test")
     void getTest() {
-        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>();
+        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>(8);
         assertThat(deque.get(0)).isEqualTo(null);
         deque.addFirst(2);
         assertThat(deque.get(0)).isEqualTo(2);
@@ -49,7 +49,7 @@ public class ArrayDeque61BTest {
     @Test
     @DisplayName("size Test")
     void sizeTest() {
-        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>();
+        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>(8);
         assertThat(deque.size()).isEqualTo(0);
         deque.addFirst(2);
         assertThat(deque.size()).isEqualTo(1);
@@ -60,7 +60,7 @@ public class ArrayDeque61BTest {
     @Test
     @DisplayName("isEmpty Test")
     void isEmptyTest() {
-        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>();
+        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>(8);
         assertThat(deque.isEmpty()).isTrue();
         deque.addFirst(2);
         assertThat(deque.isEmpty()).isFalse();
@@ -69,7 +69,7 @@ public class ArrayDeque61BTest {
     @Test
     @DisplayName("toList Test")
     void toListTest() {
-        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>();
+        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>(8);
         deque.addFirst(2);
         deque.addFirst(1);
         deque.addLast(3);
@@ -81,7 +81,7 @@ public class ArrayDeque61BTest {
     @Test
     @DisplayName("removeFirst Test")
     void removeFirstTest() {
-        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>();
+        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>(8);
         assertThat(deque.removeFirst()).isEqualTo(null);
         deque.addFirst(2);
         assertThat(deque.removeFirst()).isEqualTo(2);
@@ -97,7 +97,7 @@ public class ArrayDeque61BTest {
     @Test
     @DisplayName("removeLast Test")
     void removeLastTest() {
-        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>();
+        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>(8);
         assertThat(deque.removeLast()).isEqualTo(null);
         deque.addFirst(2);
         assertThat(deque.removeLast()).isEqualTo(2);
@@ -108,5 +108,39 @@ public class ArrayDeque61BTest {
         assertThat(deque.removeLast()).isEqualTo(3);
         assertThat(deque.toList()).containsExactly(1, 2).inOrder();
 
+    }
+
+    @Test
+    @DisplayName("sizeUp Test")
+    void sizeUpTest() {
+        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>(8);
+        for (int i = 9999; i >= 0; i--) {
+            deque.addFirst(i);
+        }
+        assertThat(deque.size()).isEqualTo(10000);
+        assertThat(deque.get(1999)).isEqualTo(1999);
+
+        for (int i = 8000; i > 0; i--) {
+            deque.removeLast();
+        }
+        assertThat(deque.size()).isEqualTo(2000);
+        assertThat(deque.get(51)).isEqualTo(51);
+
+        for (int i = 1996; i > 0; i--) {
+            deque.removeFirst();
+        }
+        assertThat(deque.size()).isEqualTo(4);
+        assertThat(deque.toList()).containsExactly( 1996, 1997, 1998, 1999).inOrder();
+
+        for (int i = 4; i > 0; i--) {
+            deque.removeLast();
+        }
+        assertThat(deque.size()).isEqualTo(0);
+
+        for (int i = 0; i < 10000; i++) {
+            deque.addLast(i);
+        }
+        assertThat(deque.size()).isEqualTo(10000);
+        assertThat(deque.get(1999)).isEqualTo(1999);
     }
 }

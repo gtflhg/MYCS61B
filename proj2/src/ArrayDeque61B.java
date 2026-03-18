@@ -1,16 +1,17 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ArrayDeque61B<T> implements Deque61B<T>{
     private int size;
     private T[] elements;
     private int nextFirst;
+    private int length;
 
-    public ArrayDeque61B() {
+    public ArrayDeque61B(int l) {
         size = 0;
         nextFirst = 0;
-        elements = (T[]) new Object[1000];
+        elements = (T[]) new Object[l];
+        length = l;
     }
 
     private int getActualIndex(int index){
@@ -20,16 +21,37 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
     }
 
     private int getIndexInCircle(int index){
-        if(index >= 1000){
-            return index - 1000;
+        if(index >= length){
+            return index - length;
         }else if(index < 0){
-            return index + 1000;
+            return index + length;
         }
         return index;
     }
 
     private boolean validateIndex(int index){
         return index >= 0 && index < size;
+    }
+
+    private void sizeUp(){
+        T[] newElement = (T[]) new Object[length*2];
+        for(int i = 0; i < length; i++){
+            newElement[i] = elements[getActualIndex(i)];
+        }
+        this.length = length*2;
+        this.elements = newElement;
+        this.nextFirst = getIndexInCircle(-1);
+
+    }
+
+    private  void sizeDown(){
+        T[] newElement = (T[]) new Object[length/2];
+        for(int i = 0; i < length/2; i++){
+            newElement[i] = elements[getActualIndex(i)];
+        }
+        this.length = length/2;
+        this.elements = newElement;
+        this.nextFirst = getIndexInCircle(-1);
     }
 
     /**
@@ -43,6 +65,9 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
         elements[index] = x;
         size++;
         nextFirst = getIndexInCircle(nextFirst - 1);
+        if(size == length){
+            sizeUp();
+        }
     }
 
     /**
@@ -55,6 +80,9 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
         int index = getActualIndex(size);
         elements[index] = x;
         size++;
+        if(size == length){
+            sizeUp();
+        }
     }
 
     /**
@@ -125,6 +153,9 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
         elements[getActualIndex(0)] = null;
         size--;
         nextFirst = getIndexInCircle(nextFirst + 1);
+        if(size <= length/4){
+            sizeDown();
+        }
         return temp;
     }
 
@@ -141,6 +172,9 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
         T temp = elements[getActualIndex(size-1)];
         elements[getActualIndex(size-1)] = null;
         size--;
+        if(size <= length/4){
+            sizeDown();
+        }
         return temp;
     }
 
