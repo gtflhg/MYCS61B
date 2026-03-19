@@ -55,6 +55,12 @@ public class ArrayDeque61BTest {
         assertThat(deque.size()).isEqualTo(1);
         deque.addFirst(1);
         assertThat(deque.size()).isEqualTo(2);
+        deque.removeFirst();
+        deque.removeLast();
+        assertThat(deque.size()).isEqualTo(0);
+        deque.removeFirst();
+        deque.removeLast();
+        assertThat(deque.size()).isEqualTo(0);
     }
 
     @Test
@@ -142,5 +148,46 @@ public class ArrayDeque61BTest {
         }
         assertThat(deque.size()).isEqualTo(10000);
         assertThat(deque.get(1999)).isEqualTo(1999);
+    }
+    @Test
+    @DisplayName("addFirst Test")
+    void addFirstTest() {
+        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>(8);
+        deque.addFirst(1);
+        assertThat(deque.toList()).containsExactly(1).inOrder();
+        deque.addFirst(2);
+        assertThat(deque.toList()).containsExactly(2, 1).inOrder();
+        for (int i = 3; i < 10; i++) {
+            deque.addFirst(i);
+        }
+        assertThat(deque.toList()).containsExactly(9, 8, 7, 6, 5, 4, 3, 2, 1).inOrder();
+
+        for (int i = 9; i > 0; i--) {
+            deque.removeFirst();
+        }
+        assertThat(deque.isEmpty()).isTrue();
+        deque.addFirst(1);
+        assertThat(deque.toList()).containsExactly(1).inOrder();
+    }
+
+    @Test
+    @DisplayName("addLast Test")
+    void addLastTest() {
+        ArrayDeque61B<Integer> deque = new ArrayDeque61B<>(8);
+        deque.addLast(1);
+        assertThat(deque.toList()).containsExactly(1).inOrder();
+        deque.addLast(2);
+        assertThat(deque.toList()).containsExactly(1, 2).inOrder();
+        for (int i = 3; i < 10; i++) {
+            deque.addLast(i);
+        }
+        assertThat(deque.toList()).containsExactly(1, 2, 3, 4, 5, 6, 7, 8, 9).inOrder();
+
+        for (int i = 9; i > 0; i--) {
+            deque.removeLast();
+        }
+        assertThat(deque.isEmpty()).isTrue();
+        deque.addLast(1);
+        assertThat(deque.toList()).containsExactly(1).inOrder();
     }
 }

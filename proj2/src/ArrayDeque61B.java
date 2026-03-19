@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ArrayDeque61B<T> implements Deque61B<T>{
@@ -53,6 +54,60 @@ public class ArrayDeque61B<T> implements Deque61B<T>{
         this.elements = newElement;
         this.nextFirst = getIndexInCircle(-1);
     }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new ArrayDequeIterator();
+    }
+
+    private class ArrayDequeIterator implements Iterator<T> {
+        int index;
+
+        ArrayDequeIterator(){
+            index = 0;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return index < size();
+        }
+
+        @Override
+        public T next() {
+            index++;
+            return elements[getActualIndex(index-1)];
+
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ArrayDeque61B<?> deque2) {
+            if(size == deque2.size){
+                for(int i = 0; i < size; i++){
+                    if(!deque2.elements[getActualIndex(i)].equals(elements[getActualIndex(i)])){
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        if (size == 0){
+            return "[]";
+        }
+        String returnString = "[";
+        for(int i = 0; i < size - 1; i++){
+            returnString += elements[getActualIndex(i)] + ", ";
+        }
+        returnString += elements[getActualIndex(size - 1)] + "]";
+        return returnString;
+    }
+
 
     /**
      * Add {@code x} to the front of the deque. Assumes {@code x} is never null.
