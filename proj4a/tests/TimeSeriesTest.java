@@ -60,4 +60,53 @@ public class TimeSeriesTest {
         assertThat(totalPopulation.years()).isEmpty();
         assertThat(totalPopulation.data()).isEmpty();
     }
+
+    @Test
+    public void testDivideBy() {
+        TimeSeries catPopulation = new TimeSeries();
+        catPopulation.put(1991, 0.0);
+        catPopulation.put(1992, 100.0);
+        catPopulation.put(1994, 200.0);
+
+        TimeSeries dogPopulation = new TimeSeries();
+        dogPopulation.put(1992, 10.0);
+        dogPopulation.put(1994, 50.0);
+
+        TimeSeries dividePopulation = dogPopulation.dividedBy(catPopulation);
+
+        List<Integer> expectedYears = new ArrayList<>();
+        expectedYears.add(1992);
+        expectedYears.add(1994);
+        assertThat(dividePopulation.years()).isEqualTo(expectedYears);
+
+        List<Double> expectedDivide = new ArrayList<>();
+        expectedDivide.add(0.1);
+        expectedDivide.add(0.25);
+        for (int i = 0; i < expectedDivide.size(); i += 1) {
+            assertThat(dividePopulation.data().get(i)).isWithin(1E-10).of(expectedDivide.get(i));
+        }
+    }
+
+    @Test
+    public void testConstractor() {
+        TimeSeries catPopulation = new TimeSeries();
+        catPopulation.put(1991, 0.0);
+        catPopulation.put(1992, 100.0);
+        catPopulation.put(1994, 200.0);
+        catPopulation.put(1995, 500.0);
+        catPopulation.put(1996, 1000.0);
+        TimeSeries middlePopulation = new TimeSeries(catPopulation, 1992, 1995);
+
+        List<Integer> expectedYears = new ArrayList<>();
+        expectedYears.add(1992);
+        expectedYears.add(1994);
+        expectedYears.add(1995);
+        assertThat(expectedYears).isEqualTo(middlePopulation.years());
+
+        List<Double> expectedData = new ArrayList<>();
+        expectedData.add(100.0);
+        expectedData.add(200.0);
+        expectedData.add(500.0);
+        assertThat(middlePopulation.data()).isEqualTo(expectedData);
+    }
 } 

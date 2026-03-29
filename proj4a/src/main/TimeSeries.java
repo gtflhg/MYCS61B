@@ -1,7 +1,10 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
+
+import static com.google.common.truth.Truth.assertThat;
 
 /**
  * An object for mapping a year number (e.g. 1996) to numerical data. Provides
@@ -29,16 +32,21 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      * inclusive of both end points.
      */
     public TimeSeries(TimeSeries ts, int startYear, int endYear) {
-        super();
-        // TODO: Fill in this constructor.
+        if (startYear < MIN_YEAR || endYear > MAX_YEAR || startYear > endYear) {
+            throw new IllegalArgumentException();
+        }
+        for (int i = startYear; i <= endYear; i += 1) {
+            if (ts.containsKey(i)) {
+                this.put(i, ts.get(i));
+            }
+        }
     }
 
     /**
      *  Returns all years for this time series in ascending order.
      */
     public List<Integer> years() {
-        // TODO: Fill in this method.
-        return null;
+        return new ArrayList<>(this.keySet());
     }
 
     /**
@@ -46,8 +54,7 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      *  order of years().
      */
     public List<Double> data() {
-        // TODO: Fill in this method.
-        return null;
+        return new ArrayList<>(this.values());
     }
 
     /**
@@ -60,8 +67,10 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      * should store the value from the TimeSeries that contains that year.
      */
     public TimeSeries plus(TimeSeries ts) {
-        // TODO: Fill in this method.
-        return null;
+        TimeSeries maxMap = this.size() > ts.size() ? (TimeSeries) this.clone() : (TimeSeries) ts.clone();
+        TimeSeries minMap = this.size() <= ts.size() ? this : ts;
+        minMap.forEach((key, value) -> maxMap.merge(key, value, Double::sum));
+        return maxMap;
     }
 
     /**
@@ -74,8 +83,15 @@ public class TimeSeries extends TreeMap<Integer, Double> {
      * If TS has a year that is not in this TimeSeries, ignore it.
      */
     public TimeSeries dividedBy(TimeSeries ts) {
-        // TODO: Fill in this method.
-        return null;
+        TimeSeries dividedMap = new TimeSeries();
+        List<Integer> dividedYear = years();
+        for (int i = 0; i < this.size(); i += 1) {
+            if (!ts.containsKey(dividedYear.get(i))) {
+                throw  new IllegalArgumentException();
+            }
+            dividedMap.put(dividedYear.get(i), get(dividedYear.get(i))/ts.get(dividedYear.get(i)));
+        }
+        return dividedMap;
     }
 
     // TODO: Add any private helper methods.
